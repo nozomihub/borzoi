@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios'
 import { BorzoiAPIEndpoints } from './BorzoiAPIEndpoints';
 import { BorzoiSampler } from './BorzoiSampler';
 import { BorzoiUpscaler } from './BorzoiUpscaler';
@@ -41,7 +41,7 @@ export default class Borzoi {
     if (!img.match(urlPattern)) return null;
     const imgb64 = axios
       .get(img, { responseType: 'arraybuffer' })
-      .then((res) => Buffer.from(res.data).toString('base64'));
+      .then((res: any) => Buffer.from(res.data).toString('base64'));
     return imgb64;
   }
   /**
