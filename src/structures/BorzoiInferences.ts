@@ -1,5 +1,5 @@
 export enum BorzoiInferences {
-    Txt2img,
-    Img2Img,
-    Upscale,
+  Txt2img,
+  Img2Img,
+  Upscale,
 }

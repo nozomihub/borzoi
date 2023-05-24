@@ -8,5 +8,5 @@ const borzoi = new Borzoi({
 const payload = new BorzoiPayloadBuilder(BorzoiInferences.Txt2img)
 .setPrompt("masterpiece, 1girl")
 .setSteps(4)
-borzoi.initializeConnection()
+borzoi.testConnection()
 borzoi.inference(payload)
