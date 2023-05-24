@@ -14,6 +14,7 @@ export default class Borzoi {
   samplers: BorzoiSampler[];
   upscalers: BorzoiUpscaler[];
   models: BorzoiModels[];
+  prepareConnection: () => Promise<number>;
   /**
    * The base Borzoi Class that you are going to use, in order to interact with the API.
    * @param url {string} The Stable Diffusion WebUI API URL (can be localtunnel. cloudflare, etc.)
@@ -24,7 +25,7 @@ export default class Borzoi {
     this.samplers = [];
     this.upscalers = [];
     this.models = [];
-    this.testConnection();
+    this.prepareConnection = async () => this.testConnection();
   }
 /**
  * A Convenient way to decoding Base64 offloading to another function.
@@ -83,7 +84,7 @@ export default class Borzoi {
         //);
         this._isAlive = true;
       } else {
-        //console.log(`🛰️  | Unfortunately, the WebUI server wasn't great for connection. Code: ${res?.status}`);
+        console.log(`🛰️  | Unfortunately, the WebUI server wasn't great for connection. Code: ${res?.status}`);
       }
       const serverRamInfo = await this._makeRequest(BorzoiAPIEndpoints.Memory, 'GET', null);
       //console.log(`🛰️  | The server has ${serverRamInfo?.data.ram}MB of RAM.`);
@@ -99,9 +100,8 @@ export default class Borzoi {
       this._isAlive = true;
       if(res?.status) return res?.status;
       else return -1 // REDUNDANT AF
-    } catch (error) {
-      console.error(error)
-      return -1
+    } catch (error: any) {
+      throw new Error(error.toString())
     }
   }
   /**
@@ -114,7 +114,12 @@ export default class Borzoi {
    * @returns {Promise<OutputPayload>} The image generated, with additional data.
    */
   async inference(payload: BorzoiPayloadBuilder): Promise<OutputPayload> {
-    if (!this._isAlive) throw new Error("Server isn't connected/checked!");
+    //if (!this._isAlive) throw new Error("Server isn't connected/checked!");
+    if(!this._isAlive) {
+      const num = this.prepareConnection()
+
+    }
+
     const jsonPayload = payload.getPayloadInJSON();
     let operation;
     switch (payload.getInferenceType()) {

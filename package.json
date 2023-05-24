@@ -1,6 +1,6 @@
 {
   "name": "borzoi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple, easy to use and lemme do it for u wrapper for Stable Diffusion WebUI API.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
