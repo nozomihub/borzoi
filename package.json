@@ -2,11 +2,11 @@
   "name": "borzoi",
   "version": "2023.05.23",
   "description": "Simple, easy to use and lemme do it for u wrapper for Stable Diffusion WebUI API.",
-  "main": "./src/index.js",
-  "types": "./types/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "directories": {
-    "lib": "src",
-    "test": "test"
+    "lib": "lib",
+    "test": "__tests__"
   },
   "scripts": {
     "build": "tsc",
