@@ -58,11 +58,11 @@ export default class Borzoi {
   async _makeRequest(endpoint: BorzoiAPIEndpoints, method: string, data: any | null): Promise<AxiosResponse | undefined> {
     try {
       if (method.toUpperCase() == 'GET') {
-        const response = await axios.get(`${this.apiUrl}${endpoint}`);
+        const response = await axios.get(`${this.apiUrl}/${endpoint}`);
         return response;
       } else if (method.toUpperCase() == 'POST') {
         if (!data) throw new Error("Can't POST null data.");
-        const res = await axios.get(`${this.apiUrl}${endpoint}`, data);
+        const res = await axios.get(`${this.apiUrl}/${endpoint}`, data);
         return res;
       }
     } catch (error) {
@@ -116,8 +116,7 @@ export default class Borzoi {
   async inference(payload: BorzoiPayloadBuilder): Promise<OutputPayload> {
     //if (!this._isAlive) throw new Error("Server isn't connected/checked!");
     if(!this._isAlive) {
-      const num = this.prepareConnection()
-
+      this.prepareConnection()
     }
 
     const jsonPayload = payload.getPayloadInJSON();
