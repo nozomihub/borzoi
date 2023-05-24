@@ -1,5 +1,5 @@
 ## In Development - Borzoi, a simple way to communicate with Stable Diffusion WebUI API!
-_WARNING: This is created by a non-professional software programmer, so i love feedbacks, etc._
+_WARNING: This code was created by a non-professional software programmer, so i love feedbacks, etc._
 It's just a thing that i created to test/extend/consume the API in a external program, just discord bots or other thing, in a simple way.
 I'm not skilled or anything, but i will try.
 ## Requirements
