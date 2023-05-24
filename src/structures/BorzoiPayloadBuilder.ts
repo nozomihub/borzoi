@@ -13,7 +13,6 @@ export default class BorzoiPayloadBuilder {
   }
   /**
    * Returns the payload protected by [private]
-   * @deprecated now the payload returns itself.
    * @returns The builded payload.
    */
   getPayload() {

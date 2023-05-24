@@ -58,16 +58,15 @@ export default class Borzoi {
   async _makeRequest(endpoint: BorzoiAPIEndpoints, method: string, data: any | null): Promise<AxiosResponse | undefined> {
     try {
       if (method.toUpperCase() == 'GET') {
-        const response = await axios.get(`${this.apiUrl}/${endpoint}`);
+        const response = await axios.get(`${this.apiUrl}${endpoint}`);
         return response;
       } else if (method.toUpperCase() == 'POST') {
         if (!data) throw new Error("Can't POST null data.");
-        const res = await axios.get(`${this.apiUrl}/${endpoint}`, data);
+        const res = await axios.get(`${this.apiUrl}${endpoint}`, data);
         return res;
       }
-    } catch (error) {
-      console.log('Error! ' + error);
-      return undefined;
+    } catch (error: any) {
+      throw new Error(error.toString())
     }
   }
   /**
@@ -78,6 +77,7 @@ export default class Borzoi {
     // console.log(`🛰️  | Trying connection with Stable Diffusion WebUI API...`);
     try {
       const res = await this._makeRequest(BorzoiAPIEndpoints.Ping, 'GET', null);
+      console.log(res?.status)
       if (res?.status == 200) {
         //console.log(
         // `🛰️  | OK, Server response was a great OK. (200)\n🛰️  | Connection allowed, you should can operate now.`,
@@ -121,6 +121,12 @@ export default class Borzoi {
 
     const jsonPayload = payload.getPayloadInJSON();
     let operation;
+    if(!payload.getInferenceType()) {
+      throw new Error("The inference type is undefined -- set parsing inside Builder constructor!")
+    } else if(!payload.getPayload().prompt) {
+      throw new Error("For making this operation, you need AT LEAST a text prompt. set with > .setPrompt() <, please.")
+    }
+
     switch (payload.getInferenceType()) {
       case BorzoiInferences.Txt2img:
         operation = BorzoiAPIEndpoints.Txt2Img;
