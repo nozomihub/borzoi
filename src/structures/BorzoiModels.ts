@@ -1,4 +1,4 @@
-export class BorzoiModels {
+export class BorzoiModels { // Model data
   title: string;
   modelName: string;
   hash: string;

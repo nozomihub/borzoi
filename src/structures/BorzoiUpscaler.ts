@@ -1,4 +1,4 @@
-export class BorzoiUpscaler {
+export class BorzoiUpscaler { // Represents the upscaler in the code.
   name: string;
   modelName: string;
   modelPath: string;

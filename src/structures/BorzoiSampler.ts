@@ -1,4 +1,4 @@
-export class BorzoiSampler {
+export class BorzoiSampler { // Sampler Object that represents the sampler. (WHATTHEFUCK WHAT IS THIS PHRASE LOL)
   name: string;
   aliases: any;
   options: {};

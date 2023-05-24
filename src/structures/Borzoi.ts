@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { BorzoiAPIEndpoints } from './BorzoiAPIEndpoints';
 import { BorzoiSampler } from './BorzoiSampler';
 import { BorzoiUpscaler } from './BorzoiUpscaler';
@@ -23,11 +23,20 @@ export default class Borzoi {
     this.models = [];
     this.testConnection();
   }
-
-  private _decodeBase64(img: string) {
+/**
+ * A Convenient way to decoding Base64 offloading to another function.
+ * @param img {string} the Base64 (with header) image
+ * @returns {Buffer} a Buffer object with the image decoded
+ */
+  private _decodeBase64(img: string): Buffer {
     return Buffer.from(img.split(';base64,').pop() || img, 'base64');
   }
-  private _encodeBase64(img: string) {
+  /**
+   * The other way around. encoding image to Base64.
+   * @param img {string} The image url. in the future, it will be able to parse Buffer object.
+   * @returns {Promise<string> | null} The encoded Base64 string.
+   */
+  private _encodeBase64(img: string): Promise<string> | null {
     const urlPattern = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
     if (!img.match(urlPattern)) return null;
     const imgb64 = axios
@@ -35,24 +44,33 @@ export default class Borzoi {
       .then((res) => Buffer.from(res.data).toString('base64'));
     return imgb64;
   }
-
-  async _makeRequest(endpoint: BorzoiAPIEndpoints, method: string, data: any | null) {
+  /**
+   * This internal function offloads boring request functionality.
+   * @param endpoint {BorzoiAPIEndpoints} The enum endpoint for the request.
+   * @param method {string} The method (GET | POST) for the request.
+   * @param data {any | null} if you are using POST action, please insert the data here. i will make a overload function later.
+   * @returns {Promise<AxiosResponse>} The entire response.
+   */
+  async _makeRequest(endpoint: BorzoiAPIEndpoints, method: string, data: any | null): Promise<AxiosResponse | undefined> {
     try {
-      if (method == 'GET') {
+      if (method.toUpperCase() == 'GET') {
         const response = await axios.get(`${this.apiUrl}${endpoint}`);
         return response;
-      } else if (method == 'POST') {
+      } else if (method.toUpperCase() == 'POST') {
         if (!data) throw new Error("Can't POST null data.");
-
         const res = await axios.get(`${this.apiUrl}${endpoint}`, data);
         return res;
       }
     } catch (error) {
       console.log('Error! ' + error);
+      return undefined;
     }
   }
-
-  async testConnection() {
+  /**
+   * Testing function that verify if its able to connect sucessfully with Stable Diffusion WebUI API.
+   * @returns {Promise<number>} The internal http code for the test.
+   */
+  async testConnection(): Promise<number> {
     // console.log(`🛰️  | Trying connection with Stable Diffusion WebUI API...`);
     try {
       const res = await this._makeRequest(BorzoiAPIEndpoints.Ping, 'GET', null);
@@ -76,13 +94,23 @@ export default class Borzoi {
       modelsInfo?.data.forEach((m: any) => this.models.push(new BorzoiModels(m)));
       //console.log(`🛰️  | Done.`);
       this._isAlive = true;
-      return res?.status;
+      if(res?.status) return res?.status;
+      else return -1 // REDUNDANT AF
     } catch (error) {
-      //console.log(error);
+      console.error(error)
+      return -1
     }
   }
-
-  async inference(payload: BorzoiPayloadBuilder) {
+  /**
+   * Using the WebUI API, Makes a Text-to-Image inference using Stable Diffusion.
+   * Configure the payload, and wait for the response.
+   * @param payload {BorzoiPayloadBuilder} this structure makes the life easier for me (and YOU!)
+   * use the (BorzoiPayloadBuilder) for building the payload. 
+   * it is necessary to have AT LEAST
+   * a text prompt in the Payload in order to operate.
+   * @returns {Promise<OutputPayload>} The image generated, with additional data.
+   */
+  async inference(payload: BorzoiPayloadBuilder): Promise<OutputPayload> {
     if (!this._isAlive) throw new Error("Server isn't connected/checked!");
     const jsonPayload = payload.getPayloadInJSON();
     let operation;

@@ -11,18 +11,32 @@ export default class BorzoiPayloadBuilder {
     this.inferenceType = inferenceType;
     this.payload = new BorzoiPayload();
   }
-
+  /**
+   * Returns the payload protected by [private]
+   * @deprecated now the payload returns itself.
+   * @returns The builded payload.
+   */
   getPayload() {
     return this.payload;
   }
+  /**
+   * Returns the inference type builded with the payload.
+   * @returns {BorzoiInferences} The inference type.
+   */
   getInferenceType() {
     return this.inferenceType;
   }
-
+  /**
+   * Returns a string representing the entire object.
+   * @returns {string} a JSON object with the payload.
+   */
   getPayloadInJSON() {
     return JSON.stringify(this.payload);
   }
-
+  /**
+   * Enables the use of Highres. Fix for the inference.
+   * @param value {boolean} the value.
+   */
   setEnableHighres(value: boolean) {
     this.payload.enable_hr = true;
     return this;

@@ -1,4 +1,4 @@
-export enum BorzoiAPIEndpoints {
+export enum BorzoiAPIEndpoints { // API Core endpoints
   Ping = '/internal/ping',
   Txt2Img = '/sdapi/v1/txt2img',
   Img2Img = '/sdapi/v1/img2img',

@@ -1,6 +1,6 @@
 /* PLEASE GOD DO NOT BUILD THIS CLASS DIRECTLY I'M BEGGING YOU USE THE BORZOIPAYLOADBUILDER PLEASE*/
 
-export default class BorzoiPayload {
+export default class BorzoiPayload { // The exact txt2img payload (extracted from docs.)
   /* Highres Fixes */
   enable_hr!: boolean;
   denoising_strength!: number;
