@@ -57,15 +57,26 @@ export default class Borzoi {
    */
   async _makeRequest(endpoint: BorzoiAPIEndpoints, method: string, data: any | null): Promise<AxiosResponse | undefined> {
     try {
-      if (method.toUpperCase() == 'GET') {
-        const response = await axios.get(`${this.apiUrl}${endpoint}`);
-        return response;
-      } else if (method.toUpperCase() == 'POST') {
-        if (!data) throw new Error("Can't POST null data.");
-        const res = await axios.get(`${this.apiUrl}${endpoint}`, data);
-        return res;
+      let response;
+      
+      switch(method) {
+        case 'GET':
+          response = await axios.get(`${this.apiUrl}${endpoint}`);
+          break;
+        case 'POST':
+          if (!data) throw new Error("Can't POST null data.");
+          const config = {
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': 'Borzoi Client API - created by NaraFrois(nozomihub)/0.0.3'
+            }
+          }
+          response = await axios.post(`${this.apiUrl}${endpoint}`, data, config);
+          break
       }
+      return response
     } catch (error: any) {
+      console.log(error)
       throw new Error(error.toString())
     }
   }
@@ -121,14 +132,14 @@ export default class Borzoi {
 
     const jsonPayload = payload.getPayloadInJSON();
     let operation;
-    if(!payload.getInferenceType()) {
+    if(payload.getInferenceType() == undefined) {
       throw new Error("The inference type is undefined -- set parsing inside Builder constructor!")
-    } else if(!payload.getPayload().prompt) {
+    } else if(payload.getPayload().prompt == undefined) {
       throw new Error("For making this operation, you need AT LEAST a text prompt. set with > .setPrompt() <, please.")
     }
 
     switch (payload.getInferenceType()) {
-      case BorzoiInferences.Txt2img:
+      case BorzoiInferences.Txt2Img:
         operation = BorzoiAPIEndpoints.Txt2Img;
         break;
       case BorzoiInferences.Img2Img:
@@ -139,6 +150,8 @@ export default class Borzoi {
         break;
     }
     const response = await this._makeRequest(operation, 'POST', jsonPayload);
-    return new OutputPayload(response);
+    if(response?.status == 200) {
+      return new OutputPayload(response.data);
+    } else throw Error("Operation Throwed status "+response?.status)
   }
 }

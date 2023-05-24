@@ -1,5 +1,5 @@
 export enum BorzoiInferences { // Types of inference jobs.
-  Txt2img,
+  Txt2Img,
   Img2Img,
   Upscale,
 }
