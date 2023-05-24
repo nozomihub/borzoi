@@ -88,7 +88,6 @@ export default class Borzoi {
     // console.log(`🛰️  | Trying connection with Stable Diffusion WebUI API...`);
     try {
       const res = await this._makeRequest(BorzoiAPIEndpoints.Ping, 'GET', null);
-      console.log(res?.status)
       if (res?.status == 200) {
         //console.log(
         // `🛰️  | OK, Server response was a great OK. (200)\n🛰️  | Connection allowed, you should can operate now.`,
