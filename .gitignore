@@ -2,3 +2,4 @@ node_modules*
 __tests__*
 jestconfig.json
 lib*
+package-lock.json

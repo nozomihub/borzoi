@@ -14,9 +14,12 @@ export default class Borzoi {
   samplers: BorzoiSampler[];
   upscalers: BorzoiUpscaler[];
   models: BorzoiModels[];
-
-  constructor(options: any) {
-    this.apiUrl = options.url;
+  /**
+   * The base Borzoi Class that you are going to use, in order to interact with the API.
+   * @param url {string} The Stable Diffusion WebUI API URL (can be localtunnel. cloudflare, etc.)
+   */
+  constructor(url: string) {
+    this.apiUrl = url;
     this._isAlive = false;
     this.samplers = [];
     this.upscalers = [];
