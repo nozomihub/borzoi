@@ -25,7 +25,16 @@ export default class Borzoi {
     this.samplers = [];
     this.upscalers = [];
     this.models = [];
-    this.prepareConnection = async () => this.testConnection();
+    this.prepareConnection = async () => {
+      
+      if(this.apiUrl.endsWith(".lt")) {
+        this._isAlive = true // Temporary override
+      } else {
+        this.testConnection();
+      }
+
+      return 1
+    }
   }
 /**
  * A Convenient way to decoding Base64 offloading to another function.
