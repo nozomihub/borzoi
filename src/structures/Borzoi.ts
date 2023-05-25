@@ -61,14 +61,23 @@ export default class Borzoi {
       
       switch(method) {
         case 'GET':
-          response = await axios.get(`${this.apiUrl}${endpoint}`);
+          const config_get = {
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': 'Borzoi Client API - created by NaraFrois(nozomihub)/0.0.3',
+              'Bypass-Tunnel-Reminder': 'Yes!'
+            }
+          }
+          response = await axios.get(`${this.apiUrl}${endpoint}`, config_get);
+
           break;
         case 'POST':
           if (!data) throw new Error("Can't POST null data.");
           const config = {
             headers: {
               'Content-Type': 'application/json',
-              'User-Agent': 'Borzoi Client API - created by NaraFrois(nozomihub)/0.0.3'
+              'User-Agent': 'Borzoi Client API - created by NaraFrois(nozomihub)/0.0.3',
+              'Bypass-Tunnel-Reminder': 'Yes!'
             }
           }
           response = await axios.post(`${this.apiUrl}${endpoint}`, data, config);
