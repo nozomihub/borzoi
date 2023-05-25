@@ -79,7 +79,7 @@ export default class BorzoiPayloadBuilder {
   }
 
   setNegativePrompt(value: string) {
-    this.payload.prompt = value;
+    this.payload.negative_prompt = value;
     return this;
   }
 
